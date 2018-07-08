@@ -12,35 +12,38 @@
     <button id=button>付款</button>
     <script>
         window.jQuery.ajax=function({url,method,body,successFn,errorFn,headers}){
-            let request=new XMLHttpRequest()
-            request.open(method,url)
-            request.onreadystatechange=function(){
-                if (request.readyState===4){
-                    if (request.status>=200 && request.status<300) {
-                        successFn.call(undefined,request.responseText)
-                    } else {
-                        errorFn.call(undefined,request)
+            return new Promise(function(resolve,reject){
+                let request=new XMLHttpRequest()
+                request.open(method,url)
+                request.onreadystatechange=function(){
+                    if (request.readyState===4){
+                        if (request.status>=200 && request.status<300) {
+                            resolve.call(undefined,request.responseText)
+                        } else {
+                            reject.call(undefined,request)
+                        }
                     }
                 }
-            }
-            request.send(body)
+                request.send(body)
+            })
         }
         $('#button').on('click',function(){
             window.jQuery.ajax({
                 url:'http://127.0.0.1:8888/pay',
-                method:'get',
-                successFn:(responseText)=>{
+                method:'get'
+            }).then(
+                (responseText)=>{
                     console.log(responseText)
                     let string=responseText
                     let object=window.JSON.parse(string)
                     amount.textContent=object.left
                     alert('请求成功')
                 },
-                errorFn:(request)=>{
+                (request)=>{
                     console.log(request)
                     alert('请求失败')
                 }
-            })
+            )
         })
     </script>
 </body>
