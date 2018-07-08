@@ -34,12 +34,12 @@ var server = http.createServer(function(request, response){
     amount--
     fs.writeFileSync('./db',amount) 
     response.statusCode = 200
-    response.setHeader('Content-Type', 'application/javascript;charset=utf-8')
+    response.setHeader('Content-Type', 'text/json;charset=utf-8')
     response.write(`
-      {
+    {
         "success":true,
         "left":"${amount}"
-      }
+    }
     `)
     response.end()
   } else {
